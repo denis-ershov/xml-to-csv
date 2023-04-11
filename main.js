@@ -22,14 +22,14 @@ function data() {
     let x2js = new X2JS();
     let xmlText = readerCat.result;
     let jsonObj = x2js.xml_str2json(xmlText);
-    //console.log(term);
-    let data = jsonObj.data.post;
-    for (let term in data) {
+    let data = x2js.asArray(jsonObj.data.post);
+    //console.log(data);
+    let json = JSON.stringify(data);
+    for (let term in JSON.parse(json)) {
       name_category.push(data[term].TermName);
       name_category_slug.push(data[term].TermSlug);
     }
   });
-  //console.log(name_category);
 
   const selectedFileTag = fileTag[0];
   const readerTag = new FileReader();
@@ -41,8 +41,7 @@ function data() {
     let x2js = new X2JS();
     let xmlText = readerTag.result;
     let jsonObj = x2js.xml_str2json(xmlText);
-    //console.log(term);
-    let data = jsonObj.data.post;
+    let data = x2js.asArray(jsonObj.data.post);
     for (let term in data) {
       if (data[term].locative !== "") {
         name_tag.push(data[term].locative);
@@ -90,7 +89,7 @@ function data() {
   function saveCSV(arr) {
     var csv = "";
     arr.forEach(function (row) {
-      csv += row.join(",");
+      csv += row.join(";");
       csv += "\n";
     });
 
