@@ -23,10 +23,20 @@
         height: 100vh;
       }
       .container {
-        height: 60%;
+        height: 30%;
       }
       .input-group-text {
         width: 120px;
+      }
+      .data {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding-bottom: 100px;
+      }
+
+      .data > div {
+        width: 48%;
       }
     </style>
     <div class="container d-flex align-items-center justify-content-center">
@@ -40,9 +50,44 @@
           <label class="input-group-text" for="tag">Файл меток</label>
         </div>
         <button type="button" class="btn btn-primary" onclick="data()">
-          Сформировать
+          Загрузить
         </button>
       </div>
+    </div>
+    <div class="data" style="display: none;">
+      <div>
+        <h2>Рубрики</h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" width="5%">
+              <input class="form-check-input" type="checkbox" disabled />
+            </th>
+            <th scope="col" width="20%">TermName</th>
+            <th scope="col" width="20%">Locative</th>
+            <th scope="col" width="20%">TermSlug</th>
+          </tr>
+        </thead>
+        <tbody class="cat-data"></tbody>
+      </table>
+      </div>
+      <div>
+        <h2>Метки</h2>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" width="5%">
+              <input class="form-check-input" type="checkbox" disabled />
+            </th>
+            <th scope="col" width="20%">TermName</th>
+            <th scope="col" width="20%">Locative</th>
+            <th scope="col" width="20%">TermSlug</th>
+          </tr>
+        </thead>
+        <tbody class="tag-data"></tbody>
+      </table>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="generate()">Сформировать</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
