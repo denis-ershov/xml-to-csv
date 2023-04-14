@@ -1,3 +1,6 @@
+const tbodyCat = document.querySelector("tbody.cat-data");
+const tbodyTag = document.querySelector("tbody.tag-data");
+
 function data() {
   const fileCat = document.querySelector("#category").files;
   const fileTag = document.querySelector("#tag").files;
@@ -13,29 +16,28 @@ function data() {
     return;
   }
 
+  document.querySelector("div.data").removeAttribute("style");
+
+  let tr = "";
+
   const selectedFileCat = fileCat[0];
   const readerCat = new FileReader();
-  const name_category = [];
-  const name_category_slug = [];
   readerCat.readAsText(selectedFileCat);
   readerCat.addEventListener("load", (e) => {
     let x2js = new X2JS();
     let xmlText = readerCat.result;
     let jsonObj = x2js.xml_str2json(xmlText);
     let data = x2js.asArray(jsonObj.data.post);
-    //console.log(data);
     let json = JSON.stringify(data);
     for (let term in JSON.parse(json)) {
-      name_category.push(data[term].TermName);
-      name_category_slug.push(data[term].TermSlug);
+      tr = document.createElement("tr");
+      tbodyCat.append(tr);
+      tr.innerHTML = "<td scope='col' widtd='5%'><input class='form-check-input' type='checkbox'></td><td scope='col' widtd='20%'>"+data[term].TermName+"</td><td scope='col' widtd='20%'>"+data[term].locative+"</td><td scope='col' widtd='20%'>"+data[term].TermSlug+"</td>";
     }
   });
 
   const selectedFileTag = fileTag[0];
   const readerTag = new FileReader();
-  const name_tag = [];
-  const name_org = [];
-  const name_tag_slug = [];
   readerTag.readAsText(selectedFileTag);
   readerTag.addEventListener("load", (e) => {
     let x2js = new X2JS();
@@ -43,15 +45,53 @@ function data() {
     let jsonObj = x2js.xml_str2json(xmlText);
     let data = x2js.asArray(jsonObj.data.post);
     for (let term in data) {
-      if (data[term].locative !== "") {
-        name_tag.push(data[term].locative);
-      } else {
-        name_tag.push(data[term].TermName);
-      }
-      name_tag_slug.push(data[term].TermSlug);
-      name_org.push(data[term].TermName);
+      tr = document.createElement("tr");
+      tbodyTag.append(tr);
+      tr.innerHTML = "<td scope='col' widtd='5%'><input class='form-check-input' type='checkbox'></td><td scope='col' widtd='20%'>"+data[term].TermName+"</td><td scope='col' widtd='20%'>"+data[term].locative+"</td><td scope='col' widtd='20%'>"+data[term].TermSlug+"</td>";
     }
   });
+}
+
+function generate() {
+  let tableCatInfo = Array.prototype.map.call(document.querySelectorAll('.cat-data tr'), function(tr){
+    if (tr.querySelector("td:nth-child(1) > input").checked) {
+    return Array.prototype.map.call(tr.querySelectorAll('td'), function(td){
+      return td.innerHTML;
+      });
+    }
+    });
+
+    let tableTagInfo  = Array.prototype.map.call(document.querySelectorAll('.tag-data tr'), function(tr){
+      if (tr.querySelector("td:nth-child(1) > input").checked) {
+      return Array.prototype.map.call(tr.querySelectorAll('td'), function(td){
+          return td.innerHTML;
+        });
+      }
+      });
+  
+    const name_category = [];
+    const name_category_slug = [];
+    for (let tmc in tableCatInfo) {
+      if (tableCatInfo[tmc] !== undefined) {
+      name_category.push(String(tableCatInfo[tmc][1]));
+      name_category_slug.push(tableCatInfo[tmc][3]);
+    }
+    }
+
+    const name_tag = [];
+    const name_org = [];
+    const name_tag_slug = [];
+    for (let tmt in tableTagInfo) {
+      if (tableTagInfo[tmt] !== undefined) {
+      if (tableTagInfo[tmt][2] !== "") {
+        name_tag.push(tableTagInfo[tmt][2]);
+      } else {
+        name_tag.push(tableTagInfo[tmt][1]);
+      }
+      name_tag_slug.push(tableTagInfo[tmt][3]);
+      name_org.push(tableTagInfo[tmt][1]);
+    }
+    }
 
   setTimeout(() => {
     let crossName = d3.cross(name_category, name_tag);
