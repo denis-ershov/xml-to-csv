@@ -237,6 +237,7 @@ function generate() {
         );
       }
     }
+    newData.unshift(['title','url','rubric','tag']);
     saveCSV(newData);
   }, 2000);
 
